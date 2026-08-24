@@ -39,6 +39,21 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
   .cursor-ring{position:fixed;top:0;left:0;width:26px;height:26px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:90;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s,opacity .2s;opacity:0;}
 
+  .garage-intro{position:fixed;inset:0;z-index:100;pointer-events:none;}
+  .garage-intro .door{position:absolute;inset:0;transform-origin:top;
+    background:
+      repeating-linear-gradient(180deg, #37342c 0px, #37342c 3px, #211f1a 3px, #211f1a 46px, #2b2822 49px),
+      linear-gradient(180deg,#14130f,#221f19);
+    box-shadow:inset 0 -50px 70px rgba(0,0,0,.55);
+    animation:doorLift 1.2s .5s cubic-bezier(.65,0,.35,1) forwards;}
+  .garage-intro .beam{position:absolute;left:50%;top:38%;width:6px;height:6px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(255,220,164,.95), rgba(255,220,164,0) 70%);
+    filter:blur(1px);mix-blend-mode:screen;
+    animation:lightOn 1.05s .55s ease-out forwards;}
+  @keyframes doorLift{from{transform:translateY(0);}to{transform:translateY(-100%);}}
+  @keyframes lightOn{0%{width:6px;height:6px;opacity:0;}35%{opacity:1;}100%{width:1100px;height:1100px;opacity:0;}}
+  @media (prefers-reduced-motion: reduce){ .garage-intro{display:none;} }
+
   section,header,footer{padding:min(14vw,140px) min(7vw,72px);position:relative;}
 
   .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
@@ -85,6 +100,17 @@
     display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:30px;}
   .stat b{display:block;font-family:var(--display);font-size:clamp(34px,5vw,58px);font-weight:600;font-variant-numeric:tabular-nums;}
   .stat span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  .dossier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:40px;}
+  .dossier-card{border:1px solid var(--line);}
+  .dossier-card img{width:100%;aspect-ratio:3/2;object-fit:cover;}
+  .dossier-card .body{padding:22px;}
+  .dossier-card .bay-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;display:flex;justify-content:space-between;}
+  .dossier-card .bay-row span{color:var(--accent);}
+  .dossier-card h3{font-family:var(--display);font-size:21px;font-weight:600;margin-top:10px;}
+  .dossier-card .meta{font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:8px;}
+  .dossier-card .meta b{color:var(--text);font-weight:700;}
+  .dossier-card p{font-size:14px;margin-top:12px;}
 
   .names{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:36px;max-width:1100px;}
   .name-card{border:1px solid var(--line);overflow:hidden;}
@@ -143,6 +169,10 @@
 
 <div class="grain"></div>
 <div class="cursor-ring" id="cursorRing"></div>
+<div class="garage-intro" id="garageIntro" aria-hidden="true">
+  <div class="door"></div>
+  <div class="beam"></div>
+</div>
 
 <header class="hero" id="hero">
   <canvas id="particles"></canvas>
@@ -186,10 +216,17 @@
   </div>
 </section>
 
+<section class="dossier">
+  <span class="kicker reveal">Досье</span>
+  <h2 class="reveal">Восемь легенд гаража</h2>
+  <p class="lead reveal">Портретов нет — машина и три предложения говорят о человеке больше, чем фотография лица.</p>
+  <div class="dossier-grid" id="dossierGrid"></div>
+</section>
+
 <section class="roster">
   <div class="roster-head">
     <span class="kicker reveal">Автопарк</span>
-    <h2 class="reveal">8 боксов, 8 машин, 8 легенд</h2>
+    <h2 class="reveal">8 боксов, 8 машин, детально</h2>
     <p class="lead reveal">Клик по машине слева, по сегменту прогресса сверху или по стрелкам — гараж переключается мгновенно.</p>
   </div>
   <div class="stage-wrap" id="stageWrap">
@@ -218,6 +255,14 @@
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  var garageIntro = document.getElementById('garageIntro');
+  if(garageIntro && !reduced){
+    var door = garageIntro.querySelector('.door');
+    door.addEventListener('animationend', function(){ garageIntro.style.display = 'none'; });
+  } else if(garageIntro){
+    garageIntro.style.display = 'none';
+  }
+
   var roster = [
     {bay:'БОКС 01',garage:'Lounge',car:'Porsche 911 (992) Turbo S',photo:'assets/cars/01-porsche-911-turbo-s.jpg',color:'Racing Yellow, чёрные диски, тонировка',engine:'3.8L Flat-6 bi-turbo',name:'«Сталь»',role:'Пилот',bio:'Бывший военный лётчик. Пересел с истребителя на трассу, потому что там тоже нужна точность, а не адреналин. Держит время круга в голове, а не на секундомере — и почти никогда не ошибается.',hp:650,acc:'2.7',drive:'AWD'},
     {bay:'БОКС 02',garage:'Lounge',car:'BMW M4 (F82)',photo:'assets/cars/02-bmw-m4.jpg',color:'Frozen Dark Grey, чёрные диски',engine:'3.0L Twin-Turbo I6 (тюн)',name:'«Вега»',role:'Гонщица',bio:'Пришла из кольцевых гонок, устала от спонсорских наклеек и открытых трибун. Единственная, кто стабильно обгоняет «Сталь» на треке — просто никому об этом не рассказывает, ей достаточно знать самой.',hp:550,acc:'3.7',drive:'RWD'},
@@ -230,6 +275,19 @@
   ];
 
   var garageOrder = ['Lounge','White Sanctuary','Workshop','Lounge Bar'];
+
+  var dossierGrid = document.getElementById('dossierGrid');
+  dossierGrid.innerHTML = roster.map(function(c){
+    return '<article class="dossier-card">' +
+      '<img src="'+c.photo+'" alt="'+c.car+'" loading="lazy">' +
+      '<div class="body">' +
+        '<div class="bay-row">'+c.bay+'<span>'+c.garage+'</span></div>' +
+        '<h3>'+c.name+'</h3>' +
+        '<div class="meta">'+c.role+' · <b>'+c.car+'</b></div>' +
+        '<p>'+c.bio+'</p>' +
+      '</div>' +
+    '</article>';
+  }).join('');
 
   var totalHp = roster.reduce(function(s,c){return s+c.hp;},0);
   var avgAcc = (roster.reduce(function(s,c){return s+parseFloat(c.acc);},0)/roster.length).toFixed(1);
