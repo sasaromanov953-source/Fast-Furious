@@ -41,28 +41,25 @@
 
   section,header,footer{padding:min(14vw,140px) min(7vw,72px);position:relative;}
 
-  .hero{min-height:130vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;position:relative;
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
     background:radial-gradient(60% 55% at 30% 40%, rgba(169,130,47,0.10), transparent 60%),
       radial-gradient(80% 70% at 80% 90%, rgba(34,51,87,0.13), transparent 60%),
       linear-gradient(180deg,var(--bg),var(--bg-raised));overflow:hidden;}
   #particles{position:absolute;inset:0;z-index:1;}
-  .hero-veil{position:absolute;inset:0;z-index:5;pointer-events:none;
-    background:radial-gradient(120% 90% at 50% 62%, #17130e 0%, #0a0906 78%);}
-  .hero-headlights{position:absolute;left:50%;bottom:38%;transform:translateX(-50%);z-index:6;pointer-events:none;display:flex;gap:44px;}
-  .hero-headlights span{width:20px;height:12px;border-radius:3px;background:#fff2d2;opacity:0;display:block;}
   .hero-inner{position:relative;z-index:2;max-width:920px;}
-  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 22px;}
-  .wordmark{font-family:var(--display);font-size:clamp(56px,11vw,142px);line-height:.9;font-weight:600;text-transform:uppercase;letter-spacing:-0.01em;}
-  .wordmark .foil{background-image:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:shine 7s ease-in-out infinite;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 22px;opacity:0;animation:fadeUp .9s .2s ease forwards;}
+  .wordmark{font-family:var(--display);font-size:clamp(56px,11vw,142px);line-height:.9;font-weight:600;text-transform:uppercase;letter-spacing:-0.01em;opacity:0;animation:reveal 1.1s .1s cubic-bezier(.16,1,.3,1) forwards;}
+  .wordmark .foil{background-image:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:reveal 1.1s .1s cubic-bezier(.16,1,.3,1) forwards, shine 7s 1.2s ease-in-out infinite;}
   .wordmark em{font-style:italic;font-weight:400;color:var(--muted);-webkit-text-stroke:1px var(--text);-webkit-text-fill-color:transparent;}
-  .hero-rule{width:64px;height:1px;background:var(--accent-soft);margin-top:28px;}
-  .tagline{max-width:480px;margin-top:20px;font-size:18px;}
+  .hero-rule{width:64px;height:1px;background:var(--accent-soft);margin-top:28px;opacity:0;animation:fadeUp .9s .45s ease forwards;}
+  .tagline{max-width:480px;margin-top:20px;font-size:18px;opacity:0;animation:fadeUp .9s .55s ease forwards;}
   @keyframes shine{0%,100%{background-position:0% 0;}50%{background-position:100% 0;}}
-  .cta{margin-top:44px;padding:16px 34px;background:transparent;border:1px solid var(--text-soft);color:var(--text);font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;position:relative;}
+  .cta{margin-top:44px;padding:16px 34px;background:transparent;border:1px solid var(--text-soft);color:var(--text);font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;position:relative;opacity:0;animation:fadeUp .9s .8s ease forwards;}
   .cta:hover{border-color:var(--accent);color:var(--accent);}
   .scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--muted);animation:bob 2.4s ease-in-out infinite;}
+  @keyframes reveal{from{opacity:0;transform:translateY(26px);clip-path:inset(0 0 100% 0);}to{opacity:1;transform:translateY(0);clip-path:inset(0 0 0% 0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
   @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,8px);}}
-  @media (prefers-reduced-motion: reduce){ .hero-veil,.hero-headlights{display:none;} }
 
   .marquee{padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;}
   .marquee-track{display:flex;width:max-content;gap:40px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--muted);animation:scroll 26s linear infinite;white-space:nowrap;}
@@ -144,17 +141,22 @@
 
   }
 
-  .rating{overflow-x:auto;margin-top:40px;}
-  .rating table{width:100%;border-collapse:collapse;min-width:640px;font-family:var(--mono);}
-  .rating th{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:0 16px 14px 0;border-bottom:1px solid var(--line);}
-  .rating td{padding:16px 16px 16px 0;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle;}
+  .rating-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:36px;}
+  .rating-tabs button{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:9px 18px;border:1px solid var(--line);background:none;color:var(--text-soft);cursor:pointer;}
+  .rating-tabs button:hover{color:var(--text);border-color:var(--text-soft);}
+  .rating-tabs button.active{border-color:var(--accent);color:var(--accent);}
+  .rating{overflow-x:auto;margin-top:24px;}
+  .rating table{width:100%;border-collapse:collapse;min-width:760px;font-family:var(--mono);}
+  .rating th{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:0 16px 14px 0;border-bottom:1px solid var(--line);white-space:nowrap;}
+  .rating td{padding:16px 16px 16px 0;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle;color:var(--text-soft);white-space:nowrap;}
   .rating tr.top td{color:var(--text);}
+  .rating th.active-col,.rating td.active-col{color:var(--accent);font-weight:700;}
   .rating .rank{font-family:var(--display);font-size:20px;color:var(--muted);width:34px;}
   .rating tr.top .rank{color:var(--accent);}
-  .rating .car-cell{display:flex;align-items:center;gap:12px;font-family:var(--body);color:var(--text);}
+  .rating .car-cell{display:flex;align-items:center;gap:12px;font-family:var(--body);color:var(--text);white-space:nowrap;}
   .rating .car-cell img{width:56px;height:38px;object-fit:cover;border:1px solid var(--line);flex:0 0 auto;}
-  .rating .num{font-variant-numeric:tabular-nums;color:var(--text);}
-  .rating .badge{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--accent);border:1px solid var(--accent-soft);padding:2px 6px;vertical-align:middle;}
+  .rating td,.rating th{font-variant-numeric:tabular-nums;}
+  .rating .badge{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--accent);border:1px solid var(--accent-soft);padding:2px 6px;vertical-align:middle;white-space:nowrap;}
 
   footer{border-top:1px solid var(--line);text-align:left;}
   footer p{max-width:560px;font-size:16px;}
@@ -168,8 +170,6 @@
 
 <header class="hero" id="hero">
   <canvas id="particles"></canvas>
-  <div class="hero-veil" id="heroVeil" aria-hidden="true"></div>
-  <div class="hero-headlights" id="heroHeadlights" aria-hidden="true"><span></span><span></span></div>
   <div class="hero-inner">
     <p class="eyebrow">Nocturne Garage · клуб элегантного тюнинга</p>
     <h1 class="wordmark"><span class="foil">NOCTURNE</span><br><em>Garage</em></h1>
@@ -232,9 +232,10 @@
 </section>
 
 <section class="rating-section">
-  <span class="kicker reveal">Разгонный лист</span>
-  <h2 class="reveal">Кто быстрее всех до сотни</h2>
-  <p class="lead reveal">Единственная таблица, где в гараже никто не спорит — секундомер решает сам.</p>
+  <span class="kicker reveal">Рейтинги гаража</span>
+  <h2 class="reveal">Кто здесь лучший — по-разному</h2>
+  <p class="lead reveal">Единственные споры в клубе, которые решает не мнение, а цифры. Переключайте категорию.</p>
+  <div class="rating-tabs reveal" id="ratingTabs"></div>
   <div class="rating reveal">
     <table id="ratingTable"></table>
   </div>
@@ -252,33 +253,67 @@
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var roster = [
-    {bay:'БОКС 01',garage:'Lounge',car:'Porsche 911 (992) Turbo S',photo:'assets/cars/01-porsche-911-turbo-s.jpg',color:'Racing Yellow, чёрные диски, тонировка',engine:'3.8L Flat-6 bi-turbo',name:'«Сталь»',role:'Пилот',bio:'Бывший военный лётчик. Пересел с истребителя на трассу, потому что там тоже нужна точность, а не адреналин. Держит время круга в голове, а не на секундомере — и почти никогда не ошибается.',hp:650,acc:'2.7',drive:'AWD'},
-    {bay:'БОКС 02',garage:'Lounge',car:'BMW M4 (F82)',photo:'assets/cars/02-bmw-m4.jpg',color:'Frozen Dark Grey, чёрные диски',engine:'3.0L Twin-Turbo I6 (тюн)',name:'«Вега»',role:'Гонщица',bio:'Пришла из кольцевых гонок, устала от спонсорских наклеек и открытых трибун. Единственная, кто стабильно обгоняет «Сталь» на треке — просто никому об этом не рассказывает, ей достаточно знать самой.',hp:550,acc:'3.7',drive:'RWD'},
-    {bay:'БОКС 03',garage:'White Sanctuary',car:'Audi RS7 Sportback',photo:'assets/cars/03-audi-rs7.jpg',color:'Белый, чёрные диски',engine:'4.0L V8 bi-turbo Quattro',name:'«Верона»',role:'Идеолог стиля',bio:'Раньше работала арт-директором в модном доме, теперь та же дисциплина применяется к железу. Следит, чтобы ничего в клубе не выглядело случайным — от шрифта на визитке до линии диффузора.',hp:630,acc:'3.4',drive:'Quattro'},
-    {bay:'БОКС 04',garage:'White Sanctuary',car:'Ferrari SF90 Stradale',photo:'assets/cars/04-ferrari-sf90.jpg',color:'Nardo Grey сатин',engine:'4.0L V8 twin-turbo + 3 электромотора',name:'«Тень»',role:'Владелец',bio:'Про него никто толком не знает, чем он занимается вне гаража. Владеет самой дорогой машиной в клубе и говорит об этом меньше всех — приезжает поздно, уезжает раньше остальных.',hp:1000,acc:'2.5',drive:'AWD'},
-    {bay:'БОКС 05',garage:'Workshop',car:'Volkswagen Tiguan R (Mk2)',photo:'assets/cars/05-tiguan-r.jpg',color:'Тёмно-синий, чёрные диски, тонировка',engine:'2.0L TSI turbo, 4Motion',name:'«Уэст»',role:'Логистика',bio:'Раньше водил колонны в местах, где не было ни дорог, ни связи. Теперь знает, как довезти машину туда, куда не доедет ни один эвакуатор — и всегда в срок.',hp:320,acc:'4.9',drive:'4Motion'},
-    {bay:'БОКС 06',garage:'Workshop',car:'Mitsubishi Lancer Evolution X',photo:'assets/cars/06-evo-x.jpg',color:'Глубокий синий, чёрные диски, лёгкий обвес',engine:'2.0L 4B11T turbo (тюн)',name:'«Шершень»',role:'Тюнер',bio:'Купил машину убитой, разобрал и собрал заново трижды, пока не осталось ни одной случайной детали. Каждый болт в ней поставил своими руками — и может рассказать историю про каждый.',hp:450,acc:'4.0',drive:'AWD'},
-    {bay:'БОКС 07',garage:'Lounge Bar',car:'Lamborghini Urus',photo:'assets/cars/07-urus.jpg',color:'Чёрно-фиолетовый хамелеон, карбоновые вставки, чёрные кованые диски, жёлтые суппорты',engine:'4.0L V8 bi-turbo',name:'«Дрозд»',role:'Новичок',bio:'Самый молодой в клубе, взяли скорее авансом, чем по заслугам. Никто не понимал, зачем ему кроссовер мощнее половины гаража — пока не увидели, как он входит в поворот.',hp:650,acc:'3.3',drive:'AWD'},
-    {bay:'БОКС 08',garage:'Lounge Bar',car:'Aston Martin DBS Superleggera',photo:'assets/cars/08-aston-dbs.jpg',color:'British Racing Green, чёрные диски',engine:'5.2L V12 twin-turbo',name:'«Марк Эштон»',role:'Коллекционер',bio:'Начинал с копий и реплик, пока не продал всё и не купил одну настоящую. Больше никогда не покупал вторую поддельную — с тех пор в его гараже нет ничего, кроме оригиналов.',hp:725,acc:'3.4',drive:'RWD'}
+    {bay:'БОКС 01',garage:'Lounge',car:'Porsche 911 (992) Turbo S',photo:'assets/cars/01-porsche-911-turbo-s.jpg',color:'Racing Yellow, чёрные диски, тонировка',engine:'3.8L Flat-6 bi-turbo',name:'«Сталь»',role:'Пилот',bio:'Бывший военный лётчик. Пересел с истребителя на трассу, потому что там тоже нужна точность, а не адреналин. Держит время круга в голове, а не на секундомере — и почти никогда не ошибается.',hp:650,acc:'2.7',drive:'AWD',value:230000,joined:2018},
+    {bay:'БОКС 02',garage:'Lounge',car:'BMW M4 (F82)',photo:'assets/cars/02-bmw-m4.jpg',color:'Frozen Dark Grey, чёрные диски',engine:'3.0L Twin-Turbo I6 (тюн)',name:'«Вега»',role:'Гонщица',bio:'Пришла из кольцевых гонок, устала от спонсорских наклеек и открытых трибун. Единственная, кто стабильно обгоняет «Сталь» на треке — просто никому об этом не рассказывает, ей достаточно знать самой.',hp:550,acc:'3.7',drive:'RWD',value:65000,joined:2022},
+    {bay:'БОКС 03',garage:'White Sanctuary',car:'Audi RS7 Sportback',photo:'assets/cars/03-audi-rs7.jpg',color:'Белый, чёрные диски',engine:'4.0L V8 bi-turbo Quattro',name:'«Верона»',role:'Идеолог стиля',bio:'Раньше работала арт-директором в модном доме, теперь та же дисциплина применяется к железу. Следит, чтобы ничего в клубе не выглядело случайным — от шрифта на визитке до линии диффузора.',hp:630,acc:'3.4',drive:'Quattro',value:110000,joined:2019},
+    {bay:'БОКС 04',garage:'White Sanctuary',car:'Ferrari SF90 Stradale',photo:'assets/cars/04-ferrari-sf90.jpg',color:'Nardo Grey сатин',engine:'4.0L V8 twin-turbo + 3 электромотора',name:'«Тень»',role:'Владелец',bio:'Про него никто толком не знает, чем он занимается вне гаража. Владеет самой дорогой машиной в клубе и говорит об этом меньше всех — приезжает поздно, уезжает раньше остальных.',hp:1000,acc:'2.5',drive:'AWD',value:550000,joined:2017},
+    {bay:'БОКС 05',garage:'Workshop',car:'Volkswagen Tiguan R (Mk2)',photo:'assets/cars/05-tiguan-r.jpg',color:'Тёмно-синий, чёрные диски, тонировка',engine:'2.0L TSI turbo, 4Motion',name:'«Уэст»',role:'Логистика',bio:'Раньше водил колонны в местах, где не было ни дорог, ни связи. Теперь знает, как довезти машину туда, куда не доедет ни один эвакуатор — и всегда в срок.',hp:320,acc:'4.9',drive:'4Motion',value:45000,joined:2020},
+    {bay:'БОКС 06',garage:'Workshop',car:'Mitsubishi Lancer Evolution X',photo:'assets/cars/06-evo-x.jpg',color:'Глубокий синий, чёрные диски, лёгкий обвес',engine:'2.0L 4B11T turbo (тюн)',name:'«Шершень»',role:'Тюнер',bio:'Купил машину убитой, разобрал и собрал заново трижды, пока не осталось ни одной случайной детали. Каждый болт в ней поставил своими руками — и может рассказать историю про каждый.',hp:450,acc:'4.0',drive:'AWD',value:55000,joined:2021},
+    {bay:'БОКС 07',garage:'Lounge Bar',car:'Lamborghini Urus',photo:'assets/cars/07-urus.jpg',color:'Чёрно-фиолетовый хамелеон, карбоновые вставки, чёрные кованые диски, жёлтые суппорты',engine:'4.0L V8 bi-turbo',name:'«Дрозд»',role:'Новичок',bio:'Самый молодой в клубе, взяли скорее авансом, чем по заслугам. Никто не понимал, зачем ему кроссовер мощнее половины гаража — пока не увидели, как он входит в поворот.',hp:650,acc:'3.3',drive:'AWD',value:260000,joined:2024},
+    {bay:'БОКС 08',garage:'Lounge Bar',car:'Aston Martin DBS Superleggera',photo:'assets/cars/08-aston-dbs.jpg',color:'British Racing Green, чёрные диски',engine:'5.2L V12 twin-turbo',name:'«Марк Эштон»',role:'Коллекционер',bio:'Начинал с копий и реплик, пока не продал всё и не купил одну настоящую. Больше никогда не покупал вторую поддельную — с тех пор в его гараже нет ничего, кроме оригиналов.',hp:725,acc:'3.4',drive:'RWD',value:330000,joined:2016}
   ];
 
   var garageOrder = ['Lounge','White Sanctuary','Workshop','Lounge Bar'];
 
+  var leaderboards = [
+    {key:'acc', label:'0–100', dir:'asc', badge:'САМЫЙ БЫСТРЫЙ'},
+    {key:'hp', label:'Мощность', dir:'desc', badge:'САМЫЙ МОЩНЫЙ'},
+    {key:'value', label:'Стоимость', dir:'desc', badge:'САМЫЙ ДОРОГОЙ'},
+    {key:'joined', label:'Стаж в клубе', dir:'asc', badge:'СТАРОЖИЛ'}
+  ];
+  var activeLB = 0;
   var ratingTable = document.getElementById('ratingTable');
-  var ranked = roster.slice().sort(function(a,b){ return parseFloat(a.acc) - parseFloat(b.acc); });
-  var rows = ranked.map(function(c,idx){
-    return '<tr class="'+(idx===0?'top':'')+'">' +
-      '<td class="rank">'+(idx+1)+'</td>' +
-      '<td><div class="car-cell"><img src="'+c.photo+'" alt="" loading="lazy">'+c.car+(idx===0?'<span class="badge">САМЫЙ БЫСТРЫЙ</span>':'')+'</div></td>' +
-      '<td>'+c.name+'</td>' +
-      '<td class="num">'+c.acc+' с</td>' +
-      '<td class="num">'+c.hp+' л.с.</td>' +
-      '<td>'+c.drive+'</td>' +
-    '</tr>';
+  var ratingTabsEl = document.getElementById('ratingTabs');
+
+  ratingTabsEl.innerHTML = leaderboards.map(function(lb,i){
+    return '<button type="button" data-i="'+i+'">'+lb.label+'</button>';
   }).join('');
-  ratingTable.innerHTML =
-    '<thead><tr><th>№</th><th>Машина</th><th>Гонщик</th><th>0–100</th><th>Мощность</th><th>Привод</th></tr></thead>' +
-    '<tbody>'+rows+'</tbody>';
+
+  function colClass(key){ return leaderboards[activeLB].key===key ? ' class="active-col"' : ''; }
+
+  function renderRating(){
+    var lb = leaderboards[activeLB];
+    var ranked = roster.slice().sort(function(a,b){
+      var av = parseFloat(a[lb.key]), bv = parseFloat(b[lb.key]);
+      return lb.dir==='asc' ? av-bv : bv-av;
+    });
+    var rows = ranked.map(function(c,idx){
+      return '<tr class="'+(idx===0?'top':'')+'">' +
+        '<td class="rank">'+(idx+1)+'</td>' +
+        '<td><div class="car-cell"><img src="'+c.photo+'" alt="" loading="lazy">'+c.car+(idx===0?'<span class="badge">'+lb.badge+'</span>':'')+'</div></td>' +
+        '<td>'+c.name+'</td>' +
+        '<td'+colClass('acc')+'>'+c.acc+' с</td>' +
+        '<td'+colClass('hp')+'>'+c.hp+' л.с.</td>' +
+        '<td'+colClass('value')+'>~$'+Math.round(c.value/1000)+'k</td>' +
+        '<td'+colClass('joined')+'>с '+c.joined+'</td>' +
+        '<td>'+c.drive+'</td>' +
+      '</tr>';
+    }).join('');
+    ratingTable.innerHTML =
+      '<thead><tr><th>№</th><th>Машина</th><th>Гонщик</th><th'+colClass('acc')+'>0–100</th><th'+colClass('hp')+'>Мощность</th><th'+colClass('value')+'>Стоимость</th><th'+colClass('joined')+'>Стаж</th><th>Привод</th></tr></thead>' +
+      '<tbody>'+rows+'</tbody>';
+    Array.prototype.forEach.call(ratingTabsEl.children, function(btn,i){
+      btn.classList.toggle('active', i===activeLB);
+    });
+  }
+
+  ratingTabsEl.addEventListener('click', function(e){
+    var btn = e.target.closest('button');
+    if(!btn) return;
+    activeLB = Number(btn.dataset.i);
+    renderRating();
+  });
+  renderRating();
 
   var totalHp = roster.reduce(function(s,c){return s+c.hp;},0);
   var avgAcc = (roster.reduce(function(s,c){return s+parseFloat(c.acc);},0)/roster.length).toFixed(1);
@@ -424,32 +459,6 @@
   },{passive:true});
 
   paintStage(0);
-
-  var heroVeil = document.getElementById('heroVeil');
-  var heroHeadlights = document.getElementById('heroHeadlights').querySelectorAll('span');
-  if(reduced){
-    heroVeil.style.display = 'none';
-  } else {
-    var heroEl = document.getElementById('hero');
-    function updateHeroReveal(){
-      var rect = heroEl.getBoundingClientRect();
-      var scrolled = Math.max(0, -rect.top);
-      var runway = heroEl.offsetHeight - window.innerHeight;
-      var progress = runway > 0 ? Math.min(1, scrolled / runway) : 1;
-
-      var hl = Math.max(0, Math.min(1, progress / 0.4));
-      heroHeadlights.forEach(function(s){
-        s.style.opacity = hl;
-        s.style.boxShadow = hl > 0 ? '0 0 '+(42*hl)+'px '+(14*hl)+'px rgba(255,225,170,'+(0.55*hl)+')' : 'none';
-      });
-
-      var veilP = Math.max(0, Math.min(1, (progress - 0.3) / 0.6));
-      heroVeil.style.opacity = String(1 - veilP);
-    }
-    updateHeroReveal();
-    window.addEventListener('scroll', function(){ requestAnimationFrame(updateHeroReveal); }, {passive:true});
-    window.addEventListener('resize', updateHeroReveal);
-  }
 
   if(!reduced){
     var canvas = document.getElementById('particles');
