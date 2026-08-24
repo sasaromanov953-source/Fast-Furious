@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nocturne Garage</title>
+<meta name="description" content="Клуб элегантного тюнинга. Восемь машин, четыре гаража, один вкус.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f0e9d9;
+    --bg-raised:#e6dcc4;
+    --line:#ddd2b8;
+    --muted:#86806d;
+    --text-soft:#514c3d;
+    --text:#17150f;
+    --navy:#223357;
+    --navy-soft:#3a5389;
+    --accent:#a9822f;
+    --accent-soft:#c9a668;
+    --foil:linear-gradient(115deg,#7d5e22 0%,#d9b571 30%,#f2dba0 50%,#b8903f 70%,#7d5e22 100%);
+    --display:'Fraunces',Georgia,'Times New Roman',serif;
+    --body:'Manrope',system-ui,-apple-system,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;position:relative;}
+  ::selection{background:var(--accent);color:var(--bg);}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;font-weight:600;}
+  p{line-height:1.6;color:var(--text-soft);margin:0;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:80;opacity:0.04;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .cursor-ring{position:fixed;top:0;left:0;width:26px;height:26px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:90;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s,opacity .2s;opacity:0;}
+
+  section,header,footer{padding:min(14vw,140px) min(7vw,72px);position:relative;}
+
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+    background:radial-gradient(60% 55% at 30% 40%, rgba(169,130,47,0.10), transparent 60%),
+      radial-gradient(80% 70% at 80% 90%, rgba(34,51,87,0.13), transparent 60%),
+      linear-gradient(180deg,var(--bg),var(--bg-raised));overflow:hidden;}
+  #particles{position:absolute;inset:0;z-index:1;}
+  .hero-inner{position:relative;z-index:2;max-width:920px;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 22px;opacity:0;animation:fadeUp .9s .2s ease forwards;}
+  .wordmark{font-family:var(--display);font-size:clamp(56px,11vw,142px);line-height:.9;font-weight:600;text-transform:uppercase;letter-spacing:-0.01em;opacity:0;animation:reveal 1.1s .1s cubic-bezier(.16,1,.3,1) forwards;}
+  .wordmark .foil{background-image:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:reveal 1.1s .1s cubic-bezier(.16,1,.3,1) forwards, shine 7s 1.2s ease-in-out infinite;}
+  .wordmark em{font-style:italic;font-weight:400;color:var(--muted);-webkit-text-stroke:1px var(--text);-webkit-text-fill-color:transparent;}
+  .hero-rule{width:64px;height:1px;background:var(--accent-soft);margin-top:28px;opacity:0;animation:fadeUp .9s .45s ease forwards;}
+  .tagline{max-width:480px;margin-top:20px;font-size:18px;opacity:0;animation:fadeUp .9s .55s ease forwards;}
+  @keyframes shine{0%,100%{background-position:0% 0;}50%{background-position:100% 0;}}
+  .cta{margin-top:44px;padding:16px 34px;background:transparent;border:1px solid var(--text-soft);color:var(--text);font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;position:relative;opacity:0;animation:fadeUp .9s .8s ease forwards;}
+  .cta:hover{border-color:var(--accent);color:var(--accent);}
+  .scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--muted);animation:bob 2.4s ease-in-out infinite;}
+  @keyframes reveal{from{opacity:0;transform:translateY(26px);clip-path:inset(0 0 100% 0);}to{opacity:1;transform:translateY(0);clip-path:inset(0 0 0% 0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,8px);}}
+
+  .marquee{padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;}
+  .marquee-track{display:flex;width:max-content;gap:40px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--muted);animation:scroll 26s linear infinite;white-space:nowrap;}
+  .marquee-track span{color:var(--accent);margin:0 8px;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){ .reveal{transition:none;} }
+
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;display:block;}
+  section h2{font-size:clamp(28px,4.6vw,50px);max-width:760px;font-weight:600;}
+  section > p.lead{max-width:620px;margin-top:18px;font-size:17px;}
+
+  .manifesto-list{list-style:none;margin:40px 0 0;padding:0;max-width:760px;display:grid;gap:0;}
+  .manifesto-list li{display:flex;gap:24px;border-top:1px solid var(--line);padding:22px 0;}
+  .manifesto-list li:last-child{border-bottom:1px solid var(--line);}
+  .manifesto-list .num{font-family:var(--mono);font-size:13px;color:var(--accent);flex:0 0 30px;padding-top:4px;}
+  .manifesto-list .txt{font-size:17px;color:var(--text);font-weight:500;}
+  .manifesto-list .txt small{display:block;margin-top:6px;font-weight:400;color:var(--text-soft);font-size:15px;}
+
+  .stats-bar{padding:min(8vw,80px) min(7vw,72px);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:30px;}
+  .stat b{display:block;font-family:var(--display);font-size:clamp(34px,5vw,58px);font-weight:600;font-variant-numeric:tabular-nums;}
+  .stat span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  .names{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:36px;max-width:1100px;}
+  .name-card{border:1px solid var(--line);overflow:hidden;}
+  .name-card .thumb{width:100%;aspect-ratio:3/2;object-fit:cover;}
+  .name-card .body{padding:18px 20px;}
+  .name-card b{font-family:var(--display);font-size:21px;display:block;font-weight:600;}
+  .name-card span{font-size:13px;color:var(--text-soft);display:block;margin-top:8px;}
+
+  .roster{padding-left:0;padding-right:0;}
+  .roster-head{padding:0 min(7vw,72px);}
+
+  .stage-wrap{margin-top:36px;}
+  .progress-track{display:flex;gap:6px;padding:0 min(7vw,72px);margin-bottom:26px;}
+  .progress-seg{height:2px;flex:1;background:var(--line);transition:background .3s;cursor:pointer;}
+  .progress-seg.done{background:var(--muted);}
+  .progress-seg.active{background:var(--accent);}
+  .stage-grid{display:grid;grid-template-columns:260px 1fr;gap:min(6vw,64px);align-items:start;padding:28px min(7vw,72px) 0;border-top:1px solid var(--line);}
+  .index{display:flex;flex-direction:column;gap:20px;}
+  .index-group-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+  .index-item{display:block;width:100%;text-align:left;background:none;border:none;color:var(--text-soft);font-family:var(--body);font-size:14px;padding:5px 0;cursor:pointer;line-height:1.4;}
+  .index-item .index-bay{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;}
+  .index-item.active{color:var(--accent);font-weight:700;}
+  .index-item:hover{color:var(--text);}
+
+  .stage-col{min-height:440px;}
+  .stage{max-width:720px;transition:opacity .25s ease, transform .25s ease;}
+  .stage-photo{width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line);margin-bottom:20px;}
+  .stage-tag{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+  .stage-tag span{color:var(--accent);margin-left:10px;}
+  .stage-name{font-family:var(--display);font-size:clamp(28px,4vw,42px);font-weight:600;margin-top:10px;}
+  .stage-color{font-family:var(--mono);font-size:13px;color:var(--text-soft);margin-top:8px;}
+  .stage-persona{font-family:var(--mono);font-size:13px;color:var(--accent);margin-top:16px;}
+  .stage-persona b{color:var(--text);font-weight:700;}
+  .stage-bio{font-size:16px;margin-top:10px;max-width:560px;}
+  .specs{display:flex;gap:26px;margin-top:20px;border-top:1px solid var(--line);padding-top:14px;font-family:var(--mono);flex-wrap:wrap;}
+  .spec b{display:block;font-size:22px;color:var(--text);font-variant-numeric:tabular-nums;}
+  .spec span{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+  .stage-nav{display:flex;gap:10px;margin-top:26px;}
+  .stage-nav button{width:40px;height:40px;border:1px solid var(--line);background:none;color:var(--text);font-family:var(--mono);cursor:pointer;font-size:15px;}
+  .stage-nav button:hover{border-color:var(--accent);color:var(--accent);}
+
+  @media (max-width:860px){
+    .stage-grid{grid-template-columns:1fr;}
+    .index{flex-direction:row;overflow-x:auto;gap:14px;}
+    .index-group{display:flex;gap:10px;flex:0 0 auto;align-items:center;}
+    .index-group-label{display:none;}
+    .index-item{white-space:nowrap;width:auto;}
+  }
+
+  footer{border-top:1px solid var(--line);text-align:left;}
+  footer p{max-width:560px;font-size:16px;}
+  footer .signoff{margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<header class="hero" id="hero">
+  <canvas id="particles"></canvas>
+  <div class="hero-inner">
+    <p class="eyebrow">Nocturne Garage · клуб элегантного тюнинга</p>
+    <h1 class="wordmark"><span class="foil">NOCTURNE</span><br><em>Garage</em></h1>
+    <div class="hero-rule"></div>
+    <p class="tagline">Гараж, где на свету остаётся только то, что того стоит. Восемь машин, четыре гаража, один вкус.</p>
+    <button class="cta magnetic" id="ctaBtn">Смотреть гараж ↓</button>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<section class="intro">
+  <span class="kicker reveal">Манифест</span>
+  <h2 class="reveal">Не гонки. Дисциплина и вкус.</h2>
+  <p class="lead reveal">Это не витрина форсированных болидов с крыльями до неба. Каждая машина — как хорошо сшитый костюм: заметна не деталь, а то, насколько всё продумано вместе.</p>
+  <ol class="manifesto-list reveal">
+    <li><span class="num">01</span><span class="txt">Тюнинг — это редактура, а не переписывание<small>Меняем то, что улучшает форму: диски, тонировку, посадку. Не трогаем то, что ломает силуэт.</small></span></li>
+    <li><span class="num">02</span><span class="txt">Один смелый цвет — на кузов, ноль — на здание<small>Гараж всегда тёплый камень и бумага. Цвет — привилегия только самой машины.</small></span></li>
+    <li><span class="num">03</span><span class="txt">Мощность — не для светофора<small>Она — для тишины салона и собственного удовольствия, а не для чужих взглядов.</small></span></li>
+    <li><span class="num">04</span><span class="txt">Портретов нет — есть досье<small>Машина и легенда говорят о человеке больше, чем фотография.</small></span></li>
+  </ol>
+</section>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<section class="garages">
+  <span class="kicker reveal">Гаражи</span>
+  <h2 class="reveal">Четыре разных пространства, один дом</h2>
+  <p class="lead reveal">Каждая машина живёт в своём боксе. Никакого копипаста фона между машинами.</p>
+  <div class="names reveal">
+    <div class="name-card"><img class="thumb" src="assets/cars/02-bmw-m4.jpg" alt="Lounge"><div class="body"><b>Lounge</b><span>Тёплый ламповый свет, диван, ТВ, PS5. Porsche 911 Turbo S, BMW M4.</span></div></div>
+    <div class="name-card"><img class="thumb" src="assets/cars/04-ferrari-sf90.jpg" alt="White Sanctuary"><div class="body"><b>White Sanctuary</b><span>Белый мрамор, растения, дневной свет. Audi RS7, Ferrari SF90.</span></div></div>
+    <div class="name-card"><img class="thumb" src="assets/cars/06-evo-x.jpg" alt="Workshop"><div class="body"><b>Workshop</b><span>Инструменты, шкафы, открытые ворота. Tiguan R, Lancer Evolution X.</span></div></div>
+    <div class="name-card"><img class="thumb" src="assets/cars/08-aston-dbs.jpg" alt="Lounge Bar"><div class="body"><b>Lounge Bar</b><span>Другая зона отдыха — бильярд, барная стойка, вечерний свет. Urus, Aston Martin DBS.</span></div></div>
+  </div>
+</section>
+
+<section class="roster">
+  <div class="roster-head">
+    <span class="kicker reveal">Автопарк</span>
+    <h2 class="reveal">8 боксов, 8 машин, 8 легенд</h2>
+    <p class="lead reveal">Клик по машине слева, по сегменту прогресса сверху или по стрелкам — гараж переключается мгновенно.</p>
+  </div>
+  <div class="stage-wrap" id="stageWrap">
+    <div class="progress-track" id="progressTrack"></div>
+    <div class="stage-grid">
+      <nav class="index" id="indexNav"></nav>
+      <div class="stage-col">
+        <div class="stage" id="stage"></div>
+        <div class="stage-nav">
+          <button id="prevBtn" aria-label="Предыдущая машина" type="button">←</button>
+          <button id="nextBtn" aria-label="Следующая машина" type="button">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="kicker reveal">Nocturne Garage</span>
+  <h2 class="reveal">Восемь дверей. Одна — ваша, если найдёте.</h2>
+  <p class="reveal">Клуб не публикует контакты и не даёт объявлений. Если вы узнали хотя бы одну из историй выше — вы уже знаете, как нас найти.</p>
+  <p class="signoff reveal">Скорость · Вкус · Дисциплина</p>
+</footer>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var roster = [
+    {bay:'БОКС 01',garage:'Lounge',car:'Porsche 911 (992) Turbo S',photo:'assets/cars/01-porsche-911-turbo-s.jpg',color:'Racing Yellow, чёрные диски, тонировка',engine:'3.8L Flat-6 bi-turbo',name:'«Сталь»',role:'Пилот',bio:'Бывший военный лётчик. Пересел с истребителя на трассу, потому что там тоже нужна точность, а не адреналин. Держит время круга в голове, а не на секундомере — и почти никогда не ошибается.',hp:650,acc:'2.7',drive:'AWD'},
+    {bay:'БОКС 02',garage:'Lounge',car:'BMW M4 (F82)',photo:'assets/cars/02-bmw-m4.jpg',color:'Frozen Dark Grey, чёрные диски',engine:'3.0L Twin-Turbo I6 (тюн)',name:'«Вега»',role:'Гонщица',bio:'Пришла из кольцевых гонок, устала от спонсорских наклеек и открытых трибун. Единственная, кто стабильно обгоняет «Сталь» на треке — просто никому об этом не рассказывает, ей достаточно знать самой.',hp:550,acc:'3.7',drive:'RWD'},
+    {bay:'БОКС 03',garage:'White Sanctuary',car:'Audi RS7 Sportback',photo:'assets/cars/03-audi-rs7.jpg',color:'Белый, чёрные диски',engine:'4.0L V8 bi-turbo Quattro',name:'«Верона»',role:'Идеолог стиля',bio:'Раньше работала арт-директором в модном доме, теперь та же дисциплина применяется к железу. Следит, чтобы ничего в клубе не выглядело случайным — от шрифта на визитке до линии диффузора.',hp:630,acc:'3.4',drive:'Quattro'},
+    {bay:'БОКС 04',garage:'White Sanctuary',car:'Ferrari SF90 Stradale',photo:'assets/cars/04-ferrari-sf90.jpg',color:'Nardo Grey сатин',engine:'4.0L V8 twin-turbo + 3 электромотора',name:'«Тень»',role:'Владелец',bio:'Про него никто толком не знает, чем он занимается вне гаража. Владеет самой дорогой машиной в клубе и говорит об этом меньше всех — приезжает поздно, уезжает раньше остальных.',hp:1000,acc:'2.5',drive:'AWD'},
+    {bay:'БОКС 05',garage:'Workshop',car:'Volkswagen Tiguan R (Mk2)',photo:'assets/cars/05-tiguan-r.jpg',color:'Тёмно-синий, чёрные диски, тонировка',engine:'2.0L TSI turbo, 4Motion',name:'«Уэст»',role:'Логистика',bio:'Раньше водил колонны в местах, где не было ни дорог, ни связи. Теперь знает, как довезти машину туда, куда не доедет ни один эвакуатор — и всегда в срок.',hp:320,acc:'4.9',drive:'4Motion'},
+    {bay:'БОКС 06',garage:'Workshop',car:'Mitsubishi Lancer Evolution X',photo:'assets/cars/06-evo-x.jpg',color:'Глубокий синий, чёрные диски, лёгкий обвес',engine:'2.0L 4B11T turbo (тюн)',name:'«Шершень»',role:'Тюнер',bio:'Купил машину убитой, разобрал и собрал заново трижды, пока не осталось ни одной случайной детали. Каждый болт в ней поставил своими руками — и может рассказать историю про каждый.',hp:450,acc:'4.0',drive:'AWD'},
+    {bay:'БОКС 07',garage:'Lounge Bar',car:'Lamborghini Urus',photo:'assets/cars/07-urus.jpg',color:'Чёрно-фиолетовый хамелеон, карбоновые вставки, чёрные кованые диски, жёлтые суппорты',engine:'4.0L V8 bi-turbo',name:'«Дрозд»',role:'Новичок',bio:'Самый молодой в клубе, взяли скорее авансом, чем по заслугам. Никто не понимал, зачем ему кроссовер мощнее половины гаража — пока не увидели, как он входит в поворот.',hp:650,acc:'3.3',drive:'AWD'},
+    {bay:'БОКС 08',garage:'Lounge Bar',car:'Aston Martin DBS Superleggera',photo:'assets/cars/08-aston-dbs.jpg',color:'British Racing Green, чёрные диски',engine:'5.2L V12 twin-turbo',name:'«Марк Эштон»',role:'Коллекционер',bio:'Начинал с копий и реплик, пока не продал всё и не купил одну настоящую. Больше никогда не покупал вторую поддельную — с тех пор в его гараже нет ничего, кроме оригиналов.',hp:725,acc:'3.4',drive:'RWD'}
+  ];
+
+  var garageOrder = ['Lounge','White Sanctuary','Workshop','Lounge Bar'];
+
+  var totalHp = roster.reduce(function(s,c){return s+c.hp;},0);
+  var avgAcc = (roster.reduce(function(s,c){return s+parseFloat(c.acc);},0)/roster.length).toFixed(1);
+  var statsBar = document.getElementById('statsBar');
+  var stats = [
+    {target:roster.length,label:'Машин в гараже'},
+    {target:totalHp,label:'Л.с. суммарно'},
+    {target:garageOrder.length,label:'Разных гаража'},
+    {target:avgAcc,label:'Средний 0–100, с',isFloat:true}
+  ];
+  statsBar.innerHTML = stats.map(function(s){
+    return '<div class="stat"><b class="counter" data-target="'+s.target+'" data-float="'+(s.isFloat?'1':'0')+'">0</b><span>'+s.label+'</span></div>';
+  }).join('');
+
+  var track = document.getElementById('marqueeTrack');
+  var phrase = 'СКОРОСТЬ <span>·</span> ВКУС <span>·</span> ДИСЦИПЛИНА <span>·</span> НИ ОДНОГО ЛИШНЕГО ШТРИХА <span>·</span> ';
+  track.innerHTML = phrase + phrase;
+
+  var revealEls = document.querySelectorAll('.reveal');
+  if(reduced){
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+      });
+    },{threshold:0.15});
+    revealEls.forEach(function(el){ io.observe(el); });
+  }
+
+  function animateCounter(el){
+    if(!el) return;
+    var isFloat = el.getAttribute('data-float')==='1';
+    var target = parseFloat(el.getAttribute('data-target'));
+    if(reduced){ el.textContent = isFloat ? target.toFixed(1) : Math.round(target); return; }
+    var start=null, dur=800;
+    function step(ts){
+      if(!start) start=ts;
+      var p = Math.min((ts-start)/dur,1);
+      var val = target * (1-Math.pow(1-p,3));
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  var statCounters = document.querySelectorAll('.stats-bar .counter');
+  var sio = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){ animateCounter(entry.target); sio.unobserve(entry.target); }
+    });
+  },{threshold:0.6});
+  statCounters.forEach(function(el){ sio.observe(el); });
+
+  var indexNav = document.getElementById('indexNav');
+  var groupsHtml = '';
+  garageOrder.forEach(function(g){
+    groupsHtml += '<div class="index-group"><div class="index-group-label">'+g+'</div>';
+    roster.forEach(function(c,i){
+      if(c.garage===g){
+        groupsHtml += '<button class="index-item" data-i="'+i+'" type="button"><span class="index-bay">'+c.bay+'</span>'+c.car+'</button>';
+      }
+    });
+    groupsHtml += '</div>';
+  });
+  indexNav.innerHTML = groupsHtml;
+
+  var progressTrack = document.getElementById('progressTrack');
+  progressTrack.innerHTML = roster.map(function(_,i){ return '<span class="progress-seg" data-i="'+i+'"></span>'; }).join('');
+
+  var stage = document.getElementById('stage');
+  var activeIndex = 0;
+
+  function paintStage(i){
+    var c = roster[i];
+    stage.innerHTML =
+      '<img class="stage-photo" src="'+c.photo+'" alt="'+c.car+'">' +
+      '<div class="stage-tag">'+c.bay+'<span>'+c.garage+'</span></div>' +
+      '<h3 class="stage-name">'+c.car+'</h3>' +
+      '<div class="stage-color">'+c.color+' · '+c.engine+'</div>' +
+      '<div class="stage-persona"><b>'+c.name+'</b> — '+c.role+'</div>' +
+      '<p class="stage-bio">'+c.bio+'</p>' +
+      '<div class="specs">' +
+        '<div class="spec"><b class="counter" data-target="'+c.hp+'">0</b><span>Л.С.</span></div>' +
+        '<div class="spec"><b>'+c.acc+'с</b><span>0–100</span></div>' +
+        '<div class="spec"><b>'+c.drive+'</b><span>Привод</span></div>' +
+      '</div>';
+    animateCounter(stage.querySelector('.counter'));
+    document.querySelectorAll('.index-item').forEach(function(btn){
+      btn.classList.toggle('active', Number(btn.dataset.i)===i);
+    });
+    document.querySelectorAll('.progress-seg').forEach(function(seg){
+      var si = Number(seg.dataset.i);
+      seg.classList.toggle('active', si===i);
+      seg.classList.toggle('done', si<i);
+    });
+  }
+
+  function setActive(i){
+    i = (i+roster.length)%roster.length;
+    if(i===activeIndex && stage.innerHTML!=='') return;
+    activeIndex = i;
+    if(reduced){ paintStage(i); return; }
+    stage.style.opacity='0'; stage.style.transform='translateY(6px)';
+    setTimeout(function(){ paintStage(i); stage.style.opacity='1'; stage.style.transform='translateY(0)'; },180);
+  }
+
+  indexNav.addEventListener('click', function(e){
+    var btn = e.target.closest('.index-item');
+    if(!btn) return;
+    setActive(Number(btn.dataset.i));
+  });
+  progressTrack.addEventListener('click', function(e){
+    var seg = e.target.closest('.progress-seg');
+    if(!seg) return;
+    setActive(Number(seg.dataset.i));
+  });
+  document.getElementById('prevBtn').addEventListener('click', function(){ setActive(activeIndex-1); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ setActive(activeIndex+1); });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowLeft') setActive(activeIndex-1);
+    if(e.key==='ArrowRight') setActive(activeIndex+1);
+  });
+
+  paintStage(0);
+
+  if(!reduced){
+    var canvas = document.getElementById('particles');
+    var ctx = canvas.getContext('2d');
+    var hero = document.getElementById('hero');
+    function size(){ canvas.width = hero.clientWidth; canvas.height = hero.clientHeight; }
+    size();
+    window.addEventListener('resize', size);
+    var motes = Array.from({length:32}).map(function(){
+      return { x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.6+0.4,
+        vy:-(Math.random()*0.25+0.05), vx:(Math.random()-0.5)*0.15, o:Math.random()*0.35+0.08 };
+    });
+    function tick(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      motes.forEach(function(m){
+        m.x += m.vx; m.y += m.vy;
+        if(m.y < -10){ m.y = canvas.height+10; m.x = Math.random()*canvas.width; }
+        ctx.beginPath(); ctx.fillStyle = 'rgba(34,51,87,'+m.o+')'; ctx.arc(m.x,m.y,m.r,0,Math.PI*2); ctx.fill();
+      });
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  var ring = document.getElementById('cursorRing');
+  var fine = window.matchMedia('(pointer:fine)').matches;
+  if(fine && !reduced){
+    var rx=0, ry=0, tx=0, ty=0;
+    ring.style.opacity = '1';
+    window.addEventListener('mousemove', function(e){ tx=e.clientX; ty=e.clientY; });
+    document.addEventListener('mouseover', function(e){
+      var el = e.target.closest('a,button,.index-item');
+      if(el){ ring.style.width='44px'; ring.style.height='44px'; ring.style.borderColor='#a9822f'; }
+      else { ring.style.width='26px'; ring.style.height='26px'; }
+    });
+    function loop(){
+      rx += (tx-rx)*0.18; ry += (ty-ry)*0.18;
+      ring.style.transform = 'translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';
+      requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  var cta = document.getElementById('ctaBtn');
+  if(fine && !reduced){
+    cta.addEventListener('mousemove', function(e){
+      var r = cta.getBoundingClientRect();
+      var mx = e.clientX - r.left - r.width/2;
+      var my = e.clientY - r.top - r.height/2;
+      cta.style.transform = 'translate('+mx*0.25+'px,'+my*0.4+'px)';
+    });
+    cta.addEventListener('mouseleave', function(){ cta.style.transform = 'translate(0,0)'; });
+  }
+  cta.addEventListener('click', function(){
+    document.querySelector('.roster').scrollIntoView({behavior: reduced ? 'auto' : 'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
