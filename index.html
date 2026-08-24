@@ -39,48 +39,30 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
   .cursor-ring{position:fixed;top:0;left:0;width:26px;height:26px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:90;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s,opacity .2s;opacity:0;}
 
-  .garage-intro{position:fixed;inset:0;z-index:100;pointer-events:none;}
-  .garage-intro .veil{position:absolute;inset:0;background:#0a0906;animation:veilFade 1.6s 4.4s ease-in forwards;}
-  .garage-intro .headlights{position:absolute;left:50%;bottom:36%;transform:translateX(-50%);display:flex;gap:42px;}
-  .garage-intro .headlights span{width:18px;height:11px;border-radius:3px;background:#fff2d2;opacity:0;
-    animation:headlightOn 1.3s 2.7s ease-out forwards;}
-  .garage-intro .headlights span:nth-child(2){animation-delay:2.85s;}
-  .garage-intro .door{position:absolute;inset:0;transform-origin:top;
-    background:
-      repeating-linear-gradient(180deg, #37342c 0px, #37342c 3px, #211f1a 3px, #211f1a 46px, #2b2822 49px),
-      linear-gradient(180deg,#14130f,#221f19);
-    box-shadow:inset 0 -50px 70px rgba(0,0,0,.55);
-    animation:doorLift 1.9s .5s cubic-bezier(.65,0,.35,1) forwards;}
-  @keyframes doorLift{from{transform:translateY(0);}to{transform:translateY(-102%);}}
-  @keyframes headlightOn{
-    0%{opacity:0;box-shadow:0 0 0 rgba(255,225,170,0);}
-    65%{opacity:1;box-shadow:0 0 40px 14px rgba(255,225,170,.55);}
-    100%{opacity:1;box-shadow:0 0 55px 18px rgba(255,225,170,.4);}
-  }
-  @keyframes veilFade{from{opacity:1;}to{opacity:0;}}
-  @media (prefers-reduced-motion: reduce){ .garage-intro{display:none;} }
-
   section,header,footer{padding:min(14vw,140px) min(7vw,72px);position:relative;}
 
-  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  .hero{min-height:130vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;position:relative;
     background:radial-gradient(60% 55% at 30% 40%, rgba(169,130,47,0.10), transparent 60%),
       radial-gradient(80% 70% at 80% 90%, rgba(34,51,87,0.13), transparent 60%),
       linear-gradient(180deg,var(--bg),var(--bg-raised));overflow:hidden;}
   #particles{position:absolute;inset:0;z-index:1;}
+  .hero-veil{position:absolute;inset:0;z-index:5;pointer-events:none;
+    background:radial-gradient(120% 90% at 50% 62%, #17130e 0%, #0a0906 78%);}
+  .hero-headlights{position:absolute;left:50%;bottom:38%;transform:translateX(-50%);z-index:6;pointer-events:none;display:flex;gap:44px;}
+  .hero-headlights span{width:20px;height:12px;border-radius:3px;background:#fff2d2;opacity:0;display:block;}
   .hero-inner{position:relative;z-index:2;max-width:920px;}
-  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 22px;opacity:0;animation:fadeUp 1s 4.5s ease forwards;}
-  .wordmark{font-family:var(--display);font-size:clamp(56px,11vw,142px);line-height:.9;font-weight:600;text-transform:uppercase;letter-spacing:-0.01em;opacity:0;animation:reveal 1.2s 4.4s cubic-bezier(.16,1,.3,1) forwards;}
-  .wordmark .foil{background-image:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:reveal 1.2s 4.4s cubic-bezier(.16,1,.3,1) forwards, shine 7s 5.6s ease-in-out infinite;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 22px;}
+  .wordmark{font-family:var(--display);font-size:clamp(56px,11vw,142px);line-height:.9;font-weight:600;text-transform:uppercase;letter-spacing:-0.01em;}
+  .wordmark .foil{background-image:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:shine 7s ease-in-out infinite;}
   .wordmark em{font-style:italic;font-weight:400;color:var(--muted);-webkit-text-stroke:1px var(--text);-webkit-text-fill-color:transparent;}
-  .hero-rule{width:64px;height:1px;background:var(--accent-soft);margin-top:28px;opacity:0;animation:fadeUp 1s 4.75s ease forwards;}
-  .tagline{max-width:480px;margin-top:20px;font-size:18px;opacity:0;animation:fadeUp 1s 4.85s ease forwards;}
+  .hero-rule{width:64px;height:1px;background:var(--accent-soft);margin-top:28px;}
+  .tagline{max-width:480px;margin-top:20px;font-size:18px;}
   @keyframes shine{0%,100%{background-position:0% 0;}50%{background-position:100% 0;}}
-  .cta{margin-top:44px;padding:16px 34px;background:transparent;border:1px solid var(--text-soft);color:var(--text);font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;position:relative;opacity:0;animation:fadeUp 1s 5.1s ease forwards;}
+  .cta{margin-top:44px;padding:16px 34px;background:transparent;border:1px solid var(--text-soft);color:var(--text);font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;position:relative;}
   .cta:hover{border-color:var(--accent);color:var(--accent);}
   .scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--muted);animation:bob 2.4s ease-in-out infinite;}
-  @keyframes reveal{from{opacity:0;transform:translateY(26px);clip-path:inset(0 0 100% 0);}to{opacity:1;transform:translateY(0);clip-path:inset(0 0 0% 0);}}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
   @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,8px);}}
+  @media (prefers-reduced-motion: reduce){ .hero-veil,.hero-headlights{display:none;} }
 
   .marquee{padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;}
   .marquee-track{display:flex;width:max-content;gap:40px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--muted);animation:scroll 26s linear infinite;white-space:nowrap;}
@@ -106,17 +88,6 @@
     display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:30px;}
   .stat b{display:block;font-family:var(--display);font-size:clamp(34px,5vw,58px);font-weight:600;font-variant-numeric:tabular-nums;}
   .stat span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-
-  .dossier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:40px;}
-  .dossier-card{border:1px solid var(--line);}
-  .dossier-card img{width:100%;aspect-ratio:3/2;object-fit:cover;}
-  .dossier-card .body{padding:22px;}
-  .dossier-card .bay-row{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;display:flex;justify-content:space-between;}
-  .dossier-card .bay-row span{color:var(--accent);}
-  .dossier-card h3{font-family:var(--display);font-size:21px;font-weight:600;margin-top:10px;}
-  .dossier-card .meta{font-family:var(--mono);font-size:12px;color:var(--accent);margin-top:8px;}
-  .dossier-card .meta b{color:var(--text);font-weight:700;}
-  .dossier-card p{font-size:14px;margin-top:12px;}
 
   .names{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:36px;max-width:1100px;}
   .name-card{border:1px solid var(--line);overflow:hidden;}
@@ -173,6 +144,18 @@
 
   }
 
+  .rating{overflow-x:auto;margin-top:40px;}
+  .rating table{width:100%;border-collapse:collapse;min-width:640px;font-family:var(--mono);}
+  .rating th{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:0 16px 14px 0;border-bottom:1px solid var(--line);}
+  .rating td{padding:16px 16px 16px 0;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle;}
+  .rating tr.top td{color:var(--text);}
+  .rating .rank{font-family:var(--display);font-size:20px;color:var(--muted);width:34px;}
+  .rating tr.top .rank{color:var(--accent);}
+  .rating .car-cell{display:flex;align-items:center;gap:12px;font-family:var(--body);color:var(--text);}
+  .rating .car-cell img{width:56px;height:38px;object-fit:cover;border:1px solid var(--line);flex:0 0 auto;}
+  .rating .num{font-variant-numeric:tabular-nums;color:var(--text);}
+  .rating .badge{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--accent);border:1px solid var(--accent-soft);padding:2px 6px;vertical-align:middle;}
+
   footer{border-top:1px solid var(--line);text-align:left;}
   footer p{max-width:560px;font-size:16px;}
   footer .signoff{margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
@@ -182,15 +165,11 @@
 
 <div class="grain"></div>
 <div class="cursor-ring" id="cursorRing"></div>
-<div class="garage-intro" id="garageIntro" aria-hidden="true">
-  <div class="veil">
-    <div class="headlights"><span></span><span></span></div>
-  </div>
-  <div class="door"></div>
-</div>
 
 <header class="hero" id="hero">
   <canvas id="particles"></canvas>
+  <div class="hero-veil" id="heroVeil" aria-hidden="true"></div>
+  <div class="hero-headlights" id="heroHeadlights" aria-hidden="true"><span></span><span></span></div>
   <div class="hero-inner">
     <p class="eyebrow">Nocturne Garage · клуб элегантного тюнинга</p>
     <h1 class="wordmark"><span class="foil">NOCTURNE</span><br><em>Garage</em></h1>
@@ -231,13 +210,6 @@
   </div>
 </section>
 
-<section class="dossier">
-  <span class="kicker reveal">Досье</span>
-  <h2 class="reveal">Восемь легенд гаража</h2>
-  <p class="lead reveal">Портретов нет — машина и три предложения говорят о человеке больше, чем фотография лица.</p>
-  <div class="dossier-grid" id="dossierGrid"></div>
-</section>
-
 <section class="roster">
   <div class="roster-head">
     <span class="kicker reveal">Автопарк</span>
@@ -259,6 +231,15 @@
   </div>
 </section>
 
+<section class="rating-section">
+  <span class="kicker reveal">Разгонный лист</span>
+  <h2 class="reveal">Кто быстрее всех до сотни</h2>
+  <p class="lead reveal">Единственная таблица, где в гараже никто не спорит — секундомер решает сам.</p>
+  <div class="rating reveal">
+    <table id="ratingTable"></table>
+  </div>
+</section>
+
 <footer>
   <span class="kicker reveal">Nocturne Garage</span>
   <h2 class="reveal">Восемь дверей. Одна — ваша, если найдёте.</h2>
@@ -269,14 +250,6 @@
 <script>
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  var garageIntro = document.getElementById('garageIntro');
-  if(garageIntro && !reduced){
-    var veil = garageIntro.querySelector('.veil');
-    veil.addEventListener('animationend', function(){ garageIntro.style.display = 'none'; });
-  } else if(garageIntro){
-    garageIntro.style.display = 'none';
-  }
 
   var roster = [
     {bay:'БОКС 01',garage:'Lounge',car:'Porsche 911 (992) Turbo S',photo:'assets/cars/01-porsche-911-turbo-s.jpg',color:'Racing Yellow, чёрные диски, тонировка',engine:'3.8L Flat-6 bi-turbo',name:'«Сталь»',role:'Пилот',bio:'Бывший военный лётчик. Пересел с истребителя на трассу, потому что там тоже нужна точность, а не адреналин. Держит время круга в голове, а не на секундомере — и почти никогда не ошибается.',hp:650,acc:'2.7',drive:'AWD'},
@@ -291,18 +264,21 @@
 
   var garageOrder = ['Lounge','White Sanctuary','Workshop','Lounge Bar'];
 
-  var dossierGrid = document.getElementById('dossierGrid');
-  dossierGrid.innerHTML = roster.map(function(c){
-    return '<article class="dossier-card">' +
-      '<img src="'+c.photo+'" alt="'+c.car+'" loading="lazy">' +
-      '<div class="body">' +
-        '<div class="bay-row">'+c.bay+'<span>'+c.garage+'</span></div>' +
-        '<h3>'+c.name+'</h3>' +
-        '<div class="meta">'+c.role+' · <b>'+c.car+'</b></div>' +
-        '<p>'+c.bio+'</p>' +
-      '</div>' +
-    '</article>';
+  var ratingTable = document.getElementById('ratingTable');
+  var ranked = roster.slice().sort(function(a,b){ return parseFloat(a.acc) - parseFloat(b.acc); });
+  var rows = ranked.map(function(c,idx){
+    return '<tr class="'+(idx===0?'top':'')+'">' +
+      '<td class="rank">'+(idx+1)+'</td>' +
+      '<td><div class="car-cell"><img src="'+c.photo+'" alt="" loading="lazy">'+c.car+(idx===0?'<span class="badge">САМЫЙ БЫСТРЫЙ</span>':'')+'</div></td>' +
+      '<td>'+c.name+'</td>' +
+      '<td class="num">'+c.acc+' с</td>' +
+      '<td class="num">'+c.hp+' л.с.</td>' +
+      '<td>'+c.drive+'</td>' +
+    '</tr>';
   }).join('');
+  ratingTable.innerHTML =
+    '<thead><tr><th>№</th><th>Машина</th><th>Гонщик</th><th>0–100</th><th>Мощность</th><th>Привод</th></tr></thead>' +
+    '<tbody>'+rows+'</tbody>';
 
   var totalHp = roster.reduce(function(s,c){return s+c.hp;},0);
   var avgAcc = (roster.reduce(function(s,c){return s+parseFloat(c.acc);},0)/roster.length).toFixed(1);
@@ -448,6 +424,32 @@
   },{passive:true});
 
   paintStage(0);
+
+  var heroVeil = document.getElementById('heroVeil');
+  var heroHeadlights = document.getElementById('heroHeadlights').querySelectorAll('span');
+  if(reduced){
+    heroVeil.style.display = 'none';
+  } else {
+    var heroEl = document.getElementById('hero');
+    function updateHeroReveal(){
+      var rect = heroEl.getBoundingClientRect();
+      var scrolled = Math.max(0, -rect.top);
+      var runway = heroEl.offsetHeight - window.innerHeight;
+      var progress = runway > 0 ? Math.min(1, scrolled / runway) : 1;
+
+      var hl = Math.max(0, Math.min(1, progress / 0.4));
+      heroHeadlights.forEach(function(s){
+        s.style.opacity = hl;
+        s.style.boxShadow = hl > 0 ? '0 0 '+(42*hl)+'px '+(14*hl)+'px rgba(255,225,170,'+(0.55*hl)+')' : 'none';
+      });
+
+      var veilP = Math.max(0, Math.min(1, (progress - 0.3) / 0.6));
+      heroVeil.style.opacity = String(1 - veilP);
+    }
+    updateHeroReveal();
+    window.addEventListener('scroll', function(){ requestAnimationFrame(updateHeroReveal); }, {passive:true});
+    window.addEventListener('resize', updateHeroReveal);
+  }
 
   if(!reduced){
     var canvas = document.getElementById('particles');
