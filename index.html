@@ -128,16 +128,22 @@
   .progress-seg.done{background:var(--muted);}
   .progress-seg.active{background:var(--accent);}
   .stage-grid{display:grid;grid-template-columns:260px 1fr;gap:min(6vw,64px);align-items:start;padding:28px min(7vw,72px) 0;border-top:1px solid var(--line);}
-  .index{display:flex;flex-direction:column;gap:20px;}
-  .index-group-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
-  .index-item{display:block;width:100%;text-align:left;background:none;border:none;color:var(--text-soft);font-family:var(--body);font-size:14px;padding:5px 0;cursor:pointer;line-height:1.4;}
+  .index{display:flex;flex-direction:column;gap:14px;}
+  .index-group-label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+  .index-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;color:var(--text-soft);font-family:var(--body);font-size:14px;padding:4px 0;cursor:pointer;line-height:1.3;}
+  .index-item .index-thumb{width:54px;height:36px;object-fit:cover;border:1px solid var(--line);flex:0 0 auto;filter:grayscale(.2) brightness(.97);transition:filter .2s,border-color .2s;}
+  .index-item.active .index-thumb{filter:none;border-color:var(--accent);}
+  .index-item .index-text{display:flex;flex-direction:column;min-width:0;}
   .index-item .index-bay{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;}
   .index-item.active{color:var(--accent);font-weight:700;}
   .index-item:hover{color:var(--text);}
+  .index-item:hover .index-thumb{filter:none;}
 
   .stage-col{min-height:440px;}
-  .stage{max-width:720px;transition:opacity .25s ease, transform .25s ease;}
-  .stage-photo{width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line);margin-bottom:20px;}
+  .stage{max-width:720px;transition:opacity .25s ease, transform .25s ease;touch-action:pan-y;}
+  .stage-media{position:relative;margin-bottom:20px;}
+  .stage-photo{width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line);display:block;}
+  .stage-caption{display:none;}
   .stage-tag{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
   .stage-tag span{color:var(--accent);margin-left:10px;}
   .stage-name{font-family:var(--display);font-size:clamp(28px,4vw,42px);font-weight:600;margin-top:10px;}
@@ -154,10 +160,22 @@
 
   @media (max-width:860px){
     .stage-grid{grid-template-columns:1fr;}
-    .index{flex-direction:row;overflow-x:auto;gap:14px;}
-    .index-group{display:flex;gap:10px;flex:0 0 auto;align-items:center;}
+    .index{flex-direction:row;overflow-x:auto;gap:12px;padding-bottom:4px;}
+    .index-group{display:flex;gap:12px;flex:0 0 auto;align-items:center;}
     .index-group-label{display:none;}
-    .index-item{white-space:nowrap;width:auto;}
+    .index-item{white-space:nowrap;width:auto;flex-direction:column;align-items:flex-start;gap:6px;}
+    .index-item .index-thumb{width:96px;height:64px;}
+    .index-item .index-text{white-space:nowrap;}
+
+    .stage-photo{aspect-ratio:4/5;border:none;}
+    .stage-caption{display:block;position:absolute;left:0;right:0;bottom:0;padding:20px 18px 18px;
+      background:linear-gradient(180deg, rgba(15,13,9,0) 0%, rgba(15,13,9,.7) 55%, rgba(15,13,9,.93) 100%);}
+    .stage-caption .cap-tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-soft);}
+    .stage-caption .cap-name{font-family:var(--display);font-size:25px;color:#faf6ec;font-weight:600;margin-top:6px;}
+    .stage-caption .cap-persona{font-family:var(--mono);font-size:12px;color:#e7e0cf;display:block;margin-top:6px;}
+    .stage-info{display:none;}
+    .stage-nav{justify-content:center;}
+    .stage-nav button{width:52px;height:44px;}
   }
 
   footer{border-top:1px solid var(--line);text-align:left;}
@@ -348,7 +366,10 @@
     groupsHtml += '<div class="index-group"><div class="index-group-label">'+g+'</div>';
     roster.forEach(function(c,i){
       if(c.garage===g){
-        groupsHtml += '<button class="index-item" data-i="'+i+'" type="button"><span class="index-bay">'+c.bay+'</span>'+c.car+'</button>';
+        groupsHtml += '<button class="index-item" data-i="'+i+'" type="button">' +
+          '<img class="index-thumb" src="'+c.photo+'" alt="" loading="lazy">' +
+          '<span class="index-text"><span class="index-bay">'+c.bay+'</span>'+c.car+'</span>' +
+        '</button>';
       }
     });
     groupsHtml += '</div>';
@@ -364,11 +385,20 @@
   function paintStage(i){
     var c = roster[i];
     stage.innerHTML =
-      '<img class="stage-photo" src="'+c.photo+'" alt="'+c.car+'">' +
-      '<div class="stage-tag">'+c.bay+'<span>'+c.garage+'</span></div>' +
-      '<h3 class="stage-name">'+c.car+'</h3>' +
-      '<div class="stage-color">'+c.color+' · '+c.engine+'</div>' +
-      '<div class="stage-persona"><b>'+c.name+'</b> — '+c.role+'</div>' +
+      '<div class="stage-media">' +
+        '<img class="stage-photo" src="'+c.photo+'" alt="'+c.car+'">' +
+        '<div class="stage-caption">' +
+          '<span class="cap-tag">'+c.bay+' · '+c.garage+'</span>' +
+          '<h3 class="cap-name">'+c.car+'</h3>' +
+          '<span class="cap-persona">'+c.name+' — '+c.role+'</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="stage-info">' +
+        '<div class="stage-tag">'+c.bay+'<span>'+c.garage+'</span></div>' +
+        '<h3 class="stage-name">'+c.car+'</h3>' +
+        '<div class="stage-color">'+c.color+' · '+c.engine+'</div>' +
+        '<div class="stage-persona"><b>'+c.name+'</b> — '+c.role+'</div>' +
+      '</div>' +
       '<p class="stage-bio">'+c.bio+'</p>' +
       '<div class="specs">' +
         '<div class="spec"><b class="counter" data-target="'+c.hp+'">0</b><span>Л.С.</span></div>' +
@@ -411,6 +441,23 @@
     if(e.key==='ArrowLeft') setActive(activeIndex-1);
     if(e.key==='ArrowRight') setActive(activeIndex+1);
   });
+
+  var swipeStartX = 0, swipeStartY = 0, swipeTracking = false;
+  var stageColEl = document.querySelector('.stage-col');
+  stageColEl.addEventListener('touchstart', function(e){
+    var t = e.touches[0];
+    swipeStartX = t.clientX; swipeStartY = t.clientY; swipeTracking = true;
+  },{passive:true});
+  stageColEl.addEventListener('touchend', function(e){
+    if(!swipeTracking) return;
+    swipeTracking = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - swipeStartX;
+    var dy = t.clientY - swipeStartY;
+    if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)*1.5){
+      setActive(activeIndex + (dx < 0 ? 1 : -1));
+    }
+  },{passive:true});
 
   paintStage(0);
 
