@@ -252,19 +252,41 @@
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var roster = [
-    {bay:'БОКС 01',garage:'Lounge',car:'Porsche 911 (992) Turbo S',photo:'assets/cars/01-porsche-911-turbo-s.jpg',color:'Racing Yellow, чёрные диски, тонировка',engine:'3.8L Flat-6 bi-turbo',name:'«Сталь»',role:'Пилот',bio:'Бывший военный лётчик. Пересел с истребителя на трассу, потому что там тоже нужна точность, а не адреналин. Держит время круга в голове, а не на секундомере — и почти никогда не ошибается.',hp:650,acc:'2.7',drive:'AWD',value:230000,joined:2018},
-    {bay:'БОКС 02',garage:'Lounge',car:'BMW M4 (F82)',photo:'assets/cars/02-bmw-m4.jpg',color:'Frozen Dark Grey, чёрные диски',engine:'3.0L Twin-Turbo I6 (тюн)',name:'«Вега»',role:'Гонщица',bio:'Пришла из кольцевых гонок, устала от спонсорских наклеек и открытых трибун. Единственная, кто стабильно обгоняет «Сталь» на треке — просто никому об этом не рассказывает, ей достаточно знать самой.',hp:550,acc:'3.7',drive:'RWD',value:65000,joined:2022},
-    {bay:'БОКС 03',garage:'White Sanctuary',car:'Audi RS7 Sportback',photo:'assets/cars/03-audi-rs7.jpg',color:'Белый, чёрные диски',engine:'4.0L V8 bi-turbo Quattro',name:'«Верона»',role:'Идеолог стиля',bio:'Раньше работала арт-директором в модном доме, теперь та же дисциплина применяется к железу. Следит, чтобы ничего в клубе не выглядело случайным — от шрифта на визитке до линии диффузора.',hp:630,acc:'3.4',drive:'Quattro',value:110000,joined:2019},
-    {bay:'БОКС 04',garage:'White Sanctuary',car:'Ferrari SF90 Stradale',photo:'assets/cars/04-ferrari-sf90.jpg',color:'Nardo Grey сатин',engine:'4.0L V8 twin-turbo + 3 электромотора',name:'«Тень»',role:'Владелец',bio:'Про него никто толком не знает, чем он занимается вне гаража. Владеет самой дорогой машиной в клубе и говорит об этом меньше всех — приезжает поздно, уезжает раньше остальных.',hp:1000,acc:'2.5',drive:'AWD',value:550000,joined:2017},
-    {bay:'БОКС 05',garage:'Workshop',car:'Volkswagen Tiguan R (Mk2)',photo:'assets/cars/05-tiguan-r.jpg',color:'Тёмно-синий, чёрные диски, тонировка',engine:'2.0L TSI turbo, 4Motion',name:'«Уэст»',role:'Логистика',bio:'Раньше водил колонны в местах, где не было ни дорог, ни связи. Теперь знает, как довезти машину туда, куда не доедет ни один эвакуатор — и всегда в срок.',hp:320,acc:'4.9',drive:'4Motion',value:45000,joined:2020},
-    {bay:'БОКС 06',garage:'Workshop',car:'Mitsubishi Lancer Evolution X',photo:'assets/cars/06-evo-x.jpg',color:'Глубокий синий, чёрные диски, лёгкий обвес',engine:'2.0L 4B11T turbo (тюн)',name:'«Шершень»',role:'Тюнер',bio:'Купил машину убитой, разобрал и собрал заново трижды, пока не осталось ни одной случайной детали. Каждый болт в ней поставил своими руками — и может рассказать историю про каждый.',hp:450,acc:'4.0',drive:'AWD',value:55000,joined:2021},
-    {bay:'БОКС 07',garage:'Lounge Bar',car:'Lamborghini Urus',photo:'assets/cars/07-urus.jpg',color:'Чёрно-фиолетовый хамелеон, карбоновые вставки, чёрные кованые диски, жёлтые суппорты',engine:'4.0L V8 bi-turbo',name:'«Дрозд»',role:'Новичок',bio:'Самый молодой в клубе, взяли скорее авансом, чем по заслугам. Никто не понимал, зачем ему кроссовер мощнее половины гаража — пока не увидели, как он входит в поворот.',hp:650,acc:'3.3',drive:'AWD',value:260000,joined:2024},
-    {bay:'БОКС 08',garage:'Lounge Bar',car:'Aston Martin DBS Superleggera',photo:'assets/cars/08-aston-dbs.jpg',color:'British Racing Green, чёрные диски',engine:'5.2L V12 twin-turbo',name:'«Марк Эштон»',role:'Коллекционер',bio:'Начинал с копий и реплик, пока не продал всё и не купил одну настоящую. Больше никогда не покупал вторую поддельную — с тех пор в его гараже нет ничего, кроме оригиналов.',hp:725,acc:'3.4',drive:'RWD',value:330000,joined:2016}
-  ];
-
   var garageOrder = ['Lounge','White Sanctuary','Workshop','Lounge Bar'];
 
+  var track = document.getElementById('marqueeTrack');
+  var phrase = 'СКОРОСТЬ <span>·</span> ВКУС <span>·</span> ДИСЦИПЛИНА <span>·</span> НИ ОДНОГО ЛИШНЕГО ШТРИХА <span>·</span> ';
+  track.innerHTML = phrase + phrase;
+
+  var revealEls = document.querySelectorAll('.reveal');
+  if(reduced){
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+      });
+    },{threshold:0.15});
+    revealEls.forEach(function(el){ io.observe(el); });
+  }
+
+  function animateCounter(el){
+    if(!el) return;
+    var isFloat = el.getAttribute('data-float')==='1';
+    var target = parseFloat(el.getAttribute('data-target'));
+    if(reduced){ el.textContent = isFloat ? target.toFixed(1) : Math.round(target); return; }
+    var start=null, dur=800;
+    function step(ts){
+      if(!start) start=ts;
+      var p = Math.min((ts-start)/dur,1);
+      var val = target * (1-Math.pow(1-p,3));
+      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
+      if(p<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function renderRoster(roster){
   var leaderboards = [
     {key:'acc', label:'0–100', dir:'asc', badge:'САМЫЙ БЫСТРЫЙ'},
     {key:'hp', label:'Мощность', dir:'desc', badge:'САМЫЙ МОЩНЫЙ'},
@@ -327,38 +349,6 @@
   statsBar.innerHTML = stats.map(function(s){
     return '<div class="stat"><b class="counter" data-target="'+s.target+'" data-float="'+(s.isFloat?'1':'0')+'">0</b><span>'+s.label+'</span></div>';
   }).join('');
-
-  var track = document.getElementById('marqueeTrack');
-  var phrase = 'СКОРОСТЬ <span>·</span> ВКУС <span>·</span> ДИСЦИПЛИНА <span>·</span> НИ ОДНОГО ЛИШНЕГО ШТРИХА <span>·</span> ';
-  track.innerHTML = phrase + phrase;
-
-  var revealEls = document.querySelectorAll('.reveal');
-  if(reduced){
-    revealEls.forEach(function(el){ el.classList.add('in'); });
-  } else {
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
-      });
-    },{threshold:0.15});
-    revealEls.forEach(function(el){ io.observe(el); });
-  }
-
-  function animateCounter(el){
-    if(!el) return;
-    var isFloat = el.getAttribute('data-float')==='1';
-    var target = parseFloat(el.getAttribute('data-target'));
-    if(reduced){ el.textContent = isFloat ? target.toFixed(1) : Math.round(target); return; }
-    var start=null, dur=800;
-    function step(ts){
-      if(!start) start=ts;
-      var p = Math.min((ts-start)/dur,1);
-      var val = target * (1-Math.pow(1-p,3));
-      el.textContent = isFloat ? val.toFixed(1) : Math.round(val);
-      if(p<1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
 
   var statCounters = document.querySelectorAll('.stats-bar .counter');
   var sio = new IntersectionObserver(function(entries){
@@ -459,6 +449,12 @@
   },{passive:true});
 
   paintStage(0);
+  } // end renderRoster
+
+  fetch('data/cars.json')
+    .then(function(r){ return r.json(); })
+    .then(function(data){ renderRoster(data.cars); })
+    .catch(function(err){ console.error('Не удалось загрузить data/cars.json', err); });
 
   if(!reduced){
     var canvas = document.getElementById('particles');

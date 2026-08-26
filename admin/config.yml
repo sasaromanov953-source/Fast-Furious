@@ -1,0 +1,35 @@
+backend:
+  name: git-gateway
+  branch: claude/install-frontend-design-skill-ekq6j9
+
+media_folder: "assets/cars"
+public_folder: "assets/cars"
+
+collections:
+  - name: "cars"
+    label: "Машины"
+    label_singular: "Машина"
+    files:
+      - name: "roster"
+        label: "Автопарк (8 машин)"
+        file: "data/cars.json"
+        fields:
+          - label: "Машины"
+            name: "cars"
+            widget: "list"
+            summary: "{{fields.bay}} — {{fields.car}}"
+            fields:
+              - {label: "Бокс", name: "bay", widget: "string", hint: "Например: БОКС 01"}
+              - {label: "Гараж", name: "garage", widget: "select", options: ["Lounge", "White Sanctuary", "Workshop", "Lounge Bar"]}
+              - {label: "Машина (модель)", name: "car", widget: "string"}
+              - {label: "Фото", name: "photo", widget: "image"}
+              - {label: "Цвет / комплектация", name: "color", widget: "string"}
+              - {label: "Двигатель", name: "engine", widget: "string"}
+              - {label: "Позывной гонщика", name: "name", widget: "string", hint: "Например: «Сталь»"}
+              - {label: "Роль", name: "role", widget: "string"}
+              - {label: "Легенда (био)", name: "bio", widget: "text"}
+              - {label: "Мощность, л.с.", name: "hp", widget: "number", value_type: "int"}
+              - {label: "Разгон 0–100, с", name: "acc", widget: "string", hint: "Например: 2.7"}
+              - {label: "Привод", name: "drive", widget: "string", hint: "AWD / RWD / Quattro / 4Motion"}
+              - {label: "Оценочная стоимость, $", name: "value", widget: "number", value_type: "int"}
+              - {label: "Год вступления в клуб", name: "joined", widget: "number", value_type: "int"}
